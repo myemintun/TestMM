@@ -1,0 +1,6 @@
+{
+  "name": "Seamless Travel",
+  "description": "One app for all your travel planning needs. Create detailed itineraries, explore user-shared guides, and manage your bookings seamlessly.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

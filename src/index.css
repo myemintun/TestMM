@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Space Grotesk', sans-serif;
+    background-color: #0F0F0F;
+    color: #ffffff;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', 'Space Grotesk', sans-serif;
+    letter-spacing: -0.04em;
+  }
+}
+
+/* Custom scrollbar behavior */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Leaflet Map styling for Dark Theme */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 1rem;
+  z-index: 10;
+  background-color: #121212 !important;
+}
+
+.leaflet-tile {
+  filter: brightness(0.7) invert(1) contrast(1.2) hue-rotate(200deg) saturate(0.3) !important;
+}
+
+.custom-map-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Brand styling tokens - Bold Dark Theme */
+:root {
+  --color-primary: #ffffff;
+  --color-primary-container: #3d3d3d;
+  --color-surface: #0f0f0f;
+  --color-surface-card: #161616;
+  --color-surface-container-high: #222222;
+  --color-on-surface: #ffffff;
+  --color-on-surface-variant: rgba(255, 255, 255, 0.6);
+  --color-budget-green: #22c55e;
+  --color-border-subtle: rgba(255, 255, 255, 0.1);
+}
