@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { MessageSquare } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { MessageSquare, AlertCircle } from 'lucide-react';
 
 declare global {
   interface Window {
@@ -10,37 +10,57 @@ declare global {
 }
 
 export const DisqusForum: React.FC = () => {
+  const [loadError, setLoadError] = useState(false);
+
   useEffect(() => {
-    // Inject Disqus embed script
-    const existingScript = document.querySelector(
-      'script[src="https://agentic-ai-mnm.disqus.com/embed.js"]'
-    );
+    let isMounted = true;
 
-    if (window.DISQUS) {
-      window.DISQUS.reset({
-        reload: true,
-        config: function (this: { page: { url: string; identifier: string } }) {
-          this.page.url = window.location.href;
-          this.page.identifier = window.location.pathname;
-        },
-      });
-    } else if (!existingScript) {
-      const d = document;
-      const s = d.createElement('script');
-      s.src = 'https://agentic-ai-mnm.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', (+new Date()).toString());
-      (d.head || d.body).appendChild(s);
+    try {
+      if (window.DISQUS) {
+        window.DISQUS.reset({
+          reload: true,
+          config: function (this: { page: { url: string; identifier: string } }) {
+            this.page.url = window.location.href;
+            this.page.identifier = window.location.pathname;
+          },
+        });
+      } else {
+        const existingScript = document.querySelector(
+          'script[src="https://agentic-ai-mnm.disqus.com/embed.js"]'
+        );
+
+        if (!existingScript) {
+          const d = document;
+          const s = d.createElement('script');
+          s.src = 'https://agentic-ai-mnm.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', (+new Date()).toString());
+          s.onerror = () => {
+            if (isMounted) setLoadError(true);
+          };
+          (d.head || d.body).appendChild(s);
+        }
+      }
+
+      // Inject Disqus count script safely
+      const existingCountScript = document.getElementById('dsq-count-scr');
+      if (!existingCountScript) {
+        const countScript = document.createElement('script');
+        countScript.id = 'dsq-count-scr';
+        countScript.src = 'https://agentic-ai-mnm.disqus.com/count.js';
+        countScript.async = true;
+        countScript.onerror = () => {
+          // Ignore count script error if blocked by tracking protection
+        };
+        (document.head || document.body).appendChild(countScript);
+      }
+    } catch (err) {
+      console.warn('Disqus embed loading error:', err);
+      setLoadError(true);
     }
 
-    // Inject Disqus count script
-    const existingCountScript = document.getElementById('dsq-count-scr');
-    if (!existingCountScript) {
-      const countScript = document.createElement('script');
-      countScript.id = 'dsq-count-scr';
-      countScript.src = '//agentic-ai-mnm.disqus.com/count.js';
-      countScript.async = true;
-      (document.head || document.body).appendChild(countScript);
-    }
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
@@ -61,8 +81,16 @@ export const DisqusForum: React.FC = () => {
         </div>
 
         {/* Disqus Embed Container */}
-        <div className="bg-[#161616] p-6 md:p-8 rounded-3xl border border-white/10 shadow-2xl min-h-[300px]">
-          <div id="disqus_thread"></div>
+        <div className="bg-[#161616] p-6 md:p-8 rounded-3xl border border-white/10 shadow-2xl min-h-[250px]">
+          {loadError ? (
+            <div className="flex flex-col items-center justify-center py-10 text-center text-white/60 font-['Space_Grotesk']">
+              <AlertCircle className="w-8 h-8 text-white/40 mb-3" />
+              <p className="text-sm font-semibold text-white">Disqus Forum is currently unavailable.</p>
+              <p className="text-xs text-white/50 mt-1">Please ensure third-party cookies or scripts are enabled in your browser.</p>
+            </div>
+          ) : (
+            <div id="disqus_thread"></div>
+          )}
           <noscript>
             Please enable JavaScript to view the{' '}
             <a href="https://disqus.com/?ref_noscript" className="underline text-white">
