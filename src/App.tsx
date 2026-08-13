@@ -11,6 +11,7 @@ import { ItineraryPlannerView } from './components/ItineraryPlannerView';
 import { AuthModal } from './components/AuthModal';
 import { AITripModal } from './components/AITripModal';
 import { AppDownloadModal } from './components/AppDownloadModal';
+import { DisqusForum } from './components/DisqusForum';
 import { SAMPLE_ITINERARY } from './data/mockData';
 
 export default function App() {
@@ -140,6 +141,9 @@ export default function App() {
           />
         )}
       </main>
+
+      {/* Community Disqus Forum */}
+      <DisqusForum />
 
       {/* Global Footer */}
       <Footer />
